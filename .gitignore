@@ -1,0 +1,6 @@
+venv
+alembic
+tmp
+bin
+*.pyc
+*.db
