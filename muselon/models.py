@@ -11,7 +11,8 @@ class User(Base):
 	__tablename__ = 'user_table'
 
 	id = db.Column(db.Integer, primary_key = True)
-	nickname = db.Column(db.String(64), unique = True)
+	username = db.Column(db.String(64), unique = True)
+	fullname = db.Column(db.String(240))
 	email = db.Column(db.String(120), unique = True)
 	role = db.Column(db.SmallInteger, default = ROLE_USER)
 #	events_authored = db.relationship('Event', backref = 'author', lazy = 'dynamic')
@@ -30,4 +31,15 @@ class User(Base):
 		
 	def __repr__(self):
 		return '<User %r>' % (self.nickname)	
+		
+
+class Character(Base):
+
+	__tablename__ = 'character_table'
+	
+	id = db.Column(db.Integer, primary_key = True)
+	character_username = db.Column(db.String(64))
+	character_fullname = db.Column(db.String(240))
+	
+
 	
