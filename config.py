@@ -1,5 +1,8 @@
 import os
 
+# Enabling Flask-WTF cross-site request forgery prevention 
+CSRF_ENABLED = True
+
 # Secret key required by Flask
 SECRET_KEY = 'ourlittlesecret'	# crypto token
 

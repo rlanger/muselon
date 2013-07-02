@@ -15,14 +15,13 @@ Initial Setup:\
 6. Create static and template directories ("mkdir static", "mkdir templates")\
 \
 Install Additional Python Libraries:\
-flask-login, flask-sqlalchemy\
+flask-login, flask-sqlalchemy, flask-wtf\
 \
 Add Most Basic Code:\
 project_muselon/run.py\
 project_muselon/config.py\
 project_muselon/muselon/__init__.py\
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
-\cf0 project_muselon/muselon/views.py\
+project_muselon/muselon/views.py\
 \
 Installing and Configuring Alembic:\
 1. Install Alembic ("pip install alembic")\
@@ -36,6 +35,7 @@ target_metadata = models.db.metadata\
 5. Create new revision ("alembic revision -m "create first revision"")\
 populate resulting script's upgrade() and downgrade() functions.\
 6. Run first migration ("alembic upgrade head")\
+(Optionally, in environment.py set compare_type=True)\
 \
 Set up GitHub repository\
 1. Create a new repo\
@@ -47,4 +47,12 @@ git commit -m "first commit"\
 git remote add origin git@github.com:rlanger/muselon.git\
 git push -u origin master\
 \
+Set up Flask-WTF\
+1. In config.py, set "CSRF_ENABLED = True"\
+\
+Create Login\
+1. Create load_user, login, and logout methods\
+2. Create login.html page\
+\
+Install flask-wtf \
 }
