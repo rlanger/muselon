@@ -1,8 +1,11 @@
+from flask import url_for
 from muselon import db
+from muselon.utils import *
 from sqlalchemy import *
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from config import SQLALCHEMY_DATABASE_URI
+import datetime
 
 engine = create_engine(SQLALCHEMY_DATABASE_URI, echo=True)
 db_session = scoped_session(sessionmaker(autocommit=False,
@@ -61,5 +64,77 @@ class Character(Base):
 	character_fullname = Column(String(240))
 	about = Column(String)
 	
+	
+class World(Base):
+
+	__tablename__ = 'world_table'
+	
+	id = Column(Integer, primary_key = True)
+	title = Column(String)
+	description = Column(String)
+	
+	# public / private
+	# custom styling
+	# places/events -> posts
+	
+	
+# chat models
+class ChatRoom(Base):
+    __tablename__ = 'chatrooms'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+    slug = db.Column(db.String(50))
+    users = db.relationship('ChatUser', backref='chatroom', lazy='dynamic')
+    comments = db.relationship('Comment', backref='chatroom', lazy='dynamic')
+
+    def __unicode__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return url_for('room', slug=self.slug)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        db.session.add(self)
+        db.session.commit()
+
+
+class ChatUser(Base):
+    __tablename__ = 'chatusers'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+    session = db.Column(db.String(20), nullable=False)
+    chatroom_id = db.Column(db.Integer, db.ForeignKey('chatrooms.id'))
+
+    def __unicode__(self):
+        return self.name
+
+class Comment(Base):
+	__tablename__ = 'comments'
+	id = Column (Integer, primary_key=True)
+	world_id = Column (Integer, ForeignKey('chatrooms.id'))
+	#user_id = Column (Integer, ForeignKey('chatusers.id'))
+	time = Column (DateTime, nullable=False)
+	text = Column (String, nullable=False)
+	
+	def __init__(self, world, nickname, text):
+		self.world_id = world.id
+		#self.nickname = nickname
+		self.text = text
+
+		self.time = datetime.datetime.now()
+
+	def __unicode__(self):
+		return self.text
+
+	def save(self, *args, **kwargs):
+		db.session.add(self)
+		db.session.commit()
+
 # Initialize database schema (create tables)
-Base.metadata.create_all(engine)
+def init_db():
+	Base.metadata.create_all(engine)
+
+#def init_db():
+#    db.create_all(app=muselon)

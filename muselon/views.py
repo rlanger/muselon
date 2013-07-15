@@ -1,12 +1,22 @@
-from flask import Flask, request, session, g, redirect, url_for, \
+from flask import Flask, Response, request, session, g, redirect, url_for, \
 	abort, render_template, flash
 from flask.ext.login import LoginManager, login_required, login_user, logout_user, current_user
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.wtf import Form
+
+from socketio import socketio_manage
+from socketio.namespace import BaseNamespace
+from socketio.mixins import RoomsMixin, BroadcastMixin
+from gevent import monkey
+
 from werkzeug import check_password_hash, generate_password_hash
+
 from muselon import muselon, db, lm
 from muselon.forms import RegistrationForm, LoginForm
-from muselon.models import User
+from muselon.models import User, ChatRoom, ChatUser, Comment
+from muselon.utils import *
+
+monkey.patch_all()
 
 @muselon.route('/')
 def index():
@@ -50,3 +60,108 @@ def logout():
 	logout_user()
 	return redirect(url_for("index"))
 	
+	
+@muselon.route('/chat', methods=['GET', 'POST'])
+def chat():
+	return render_template("chat.html")
+
+# chat views
+@muselon.route('/chatlist')
+def rooms():
+    """
+    Homepage - lists all rooms.
+    """
+    context = {"rooms": ChatRoom.query.all()}
+    print "CONTEXT:"
+    print context
+    return render_template('chat/rooms.html', **context)
+
+
+@muselon.route('/<path:slug>')
+def room(slug):
+    """
+    Show a room.
+    """
+    context = {"room": get_object_or_404(ChatRoom, slug=slug)}
+    return render_template('chat/room.html', **context)
+
+
+@muselon.route('/create', methods=['POST'])
+def create():
+    """
+    Handles post from the "Add room" form on the homepage, and
+    redirects to the new room.
+    """
+    name = request.form.get("name")
+    if name:
+        room, created = get_or_create(ChatRoom, name=name)
+        return redirect(url_for('room', slug=room.slug))
+    return redirect(url_for('rooms'))
+
+
+class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
+    nicknames = []
+
+    def initialize(self):
+        self.logger = muselon.logger
+        self.log("Socketio session started")
+        #chatRoom 
+
+
+
+    def log(self, message):
+        self.logger.info("[{0}] {1}".format(self.socket.sessid, message))
+
+    def on_join(self, room):
+        self.room = room
+        self.join(room)
+        return True
+
+    def on_nickname(self, nickname):
+        self.log('Nickname: {0}'.format(nickname))
+        self.nicknames.append(nickname)
+        self.session['nickname'] = nickname
+        self.broadcast_event('announcement', '%s has connected' % nickname)
+        self.broadcast_event('nicknames', self.nicknames)
+        self.broadcast_event('announcement', 'PREVIOUS ACTIVITY HERE')
+        for comment in Comment.query.all():
+			self.broadcast_event('announcement', comment.text)
+        return True, nickname
+
+    def recv_disconnect(self):
+        # Remove nickname from the list.
+        self.log('Disconnected')
+        nickname = self.session['nickname']
+        self.nicknames.remove(nickname)
+        self.broadcast_event('announcement', '%s has disconnected' % nickname)
+        self.broadcast_event('nicknames', self.nicknames)
+        self.disconnect(silent=True)
+        return True
+
+    def on_user_message(self, msg):
+        self.log('User message: {0}'.format(msg))
+        self.emit_to_room(self.room, 'msg_to_room',
+            self.session['nickname'], msg)
+        #roomObj = db.session.query(ChatRoom).filter_by(name=self.room).first();
+        #roomObj = ChatRoom.query.filter_by(name="World One").first()
+        chatRoom = ChatRoom.query.filter_by(slug="world-one").first()
+        newComment = Comment(chatRoom, self.session['nickname'], msg)
+        self.log (newComment);
+        newComment.save()
+        return True
+       
+    # ON ROLL FATE 
+    def on_roll_fate(self, msg):
+    	self.log('Roll Fate: {0}'.format(msg))
+        self.emit_to_room(self.room, 'roll_fate',
+            self.session['nickname'], msg)
+
+
+@muselon.route('/socket.io/<path:remaining>')
+def socketio(remaining):
+    try:
+        socketio_manage(request.environ, {'/chat': ChatNamespace}, request)
+    except:
+        muselon.logger.error("Exception while handling socketio connection",
+                         exc_info=True)
+    return Response()

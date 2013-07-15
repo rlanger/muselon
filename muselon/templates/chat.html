@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<style>
+#content{
+	border:1px solid; 
+	margin-left: auto;
+	margin-right: auto;
+	width: 300px;
+	height: 300px;
+	overflow:auto;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	}
+	
+#content p{
+	padding: 1em;
+	margin: 1em;
+	background: #E6E6E6;
+	border: 1px solid #BDBDBD;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	}
+	
+#content li{
+	padding: 1em;
+	margin: 1em;
+	background: #E6E6E6;
+	border: 1px solid #BDBDBD;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	}
+	
+#input{
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	width:300px;
+	overflow: auto;
+	padding: 1em 0 0 0px;
+	color: #000;
+	}
+	
+</style>
+
+
+<script type="text/javascript" src="//code.jquery.com/jquery-1.8.0.min.js"></script>
+<script type="text/javascript">
+        $(document).ready(
+            function() {
+                sse = new EventSource('/post_event_source');
+                sse.onmessage = function(message) {
+                	console.log('A message has arrived!');
+                	$('#output').append('<li>'+message.data+'</li>');
+                }
+        });
+</script>
+
+
+<h1>World Stream</h1>
+<div id="content">
+<p>Here's some chat data</p>
+
+<ul id="output">
+</ul>
+
+</div>
+<div id="input">
+<textarea rows="4" cols="34">Leave a comment!</textarea>
+<button class="btn">Post</button>
+</div>
+
+{% endblock %}
