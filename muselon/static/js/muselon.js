@@ -82,9 +82,9 @@ var muselon = angular.module('muselon', ['ngResource'])
 	}
 	
 	socketio.on("updateComments", function () {
-		commentsObj = commentFactory.get({threadId: 1}, function() {
-			$scope.comments = commentsObj.json_list;
-			console.log($scope.comments);
+		commentblocksObj = commentFactory.get({threadId: 1}, function() {
+			$scope.commentblocks = commentblocksObj.json_list;
+			console.log($scope.commentblocks);
 		})
 	})
 	

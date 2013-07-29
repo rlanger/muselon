@@ -103,7 +103,14 @@
 					<button type="submit" class="btn btn-primary"> Post </button>
 				</form>
         	</div>
-	        <span ng-switch-when="dialogue">IMAGE - TEXT</span>
+	        <div ng-switch-when="dialogue">
+	            <form ng-submit="submitPost()" ng-show="postType=='dialogue'">
+	            	<button class="btn"><img src="../static/img/tinyhamlet.jpg" /></button>
+					<textarea rows="3" ng-model="post"></textarea> <br />
+					<button class="btn"> Append </button>
+					<button type="submit" class="btn btn-primary"> Post </button>
+				</form>
+	        </div>
     	    <span ng-switch-default>ERROR</span>
     		</div>
     	</td>

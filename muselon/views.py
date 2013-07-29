@@ -68,7 +68,7 @@ def socketio(remaining):
 	socketio_manage(request.environ, {"/threadspace": ThreadNamespace}, request)
 	return 'done'
 
-class ThreadNamespace(BaseNamespace):
+class ThreadNamespace(BaseNamespace, BroadcastMixin):
 	def initialize(self):
 		print "HELLO HELLO HELLO"
 
@@ -77,7 +77,7 @@ class ThreadNamespace(BaseNamespace):
 		# sanitize / check format of data
 		comment = Comment(data["text"], data["charId"])
 		comment.save()
-		self.emit("updateComments")
+		self.broadcast_event("updateComments")
 
 
 @lm.user_loader
