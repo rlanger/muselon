@@ -67,7 +67,7 @@ $(function() {
         
         $('#post-fate').submit(function () {
         	message('me', $('#challenge').val());
-        	socket.emit('user message', $('message').val());
+        	socket.emit('roll fate', $('#challenge').val());
         	clearChallenge();
         	$('#lines').get(0).scrollTop = 10000000;
         	return false;

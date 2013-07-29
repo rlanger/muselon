@@ -22,12 +22,16 @@ project_muselon/run.py\
 project_muselon/config.py\
 project_muselon/muselon/__init__.py\
 project_muselon/muselon/views.py\
+project_muselon/muselon/models.py\
+project_muselon/init_db.py\
+\
 \
 Installing and Configuring Alembic:\
 1. Install Alembic ("pip install alembic")\
 2. Create migration environment ("alembic init alembic")\
 3. In alembic.ini, edit "sqlalchemy.url =" to match URI of database\
-4. In env.py, set target_metadata\
+e.g. sqlalchemy.url = sqlite:////Users/cicero/hackerschool/project_muselon/test.db\
+4. In env.py, replace "target_metadata = None" with\
 import os, sys\
 sys.path.append(os.getcwd())\
 from muselon import models\
@@ -36,6 +40,9 @@ target_metadata = models.db.metadata\
 populate resulting script's upgrade() and downgrade() functions.\
 6. Run first migration ("alembic upgrade head")\
 (Optionally, in environment.py set compare_type=True)\
+\
+7. Autogenerate future revisions ("alembic revision --autogenerate -m "new revision"")\
+8. Follow up with "alembic upgrade head", "python init_db.py"\
 \
 Set up GitHub repository\
 1. Create a new repo\
@@ -54,5 +61,7 @@ Create Login\
 1. Create load_user, login, and logout methods\
 2. Create login.html page\
 \
-Install flask-wtf \
+Upload to Heroku\
+\
+Add SocketIO functionality\
 }

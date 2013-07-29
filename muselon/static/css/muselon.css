@@ -1,0 +1,73 @@
+h1 {
+  color: red; }
+
+.dialogue {
+  color: black;
+  border: 1px solid #333333;
+  box-shadow: 0 8px 6px -6px #666666;
+  padding: 10px; }
+
+td {
+  vertical-align: top; }
+
+.author {
+  text-align: right;
+  margin: 0 30px 0 0;
+  margin: 10px 30px 0 0;
+  font-weight: bold; }
+
+.post {
+  margin: 0px 20px 0 0;
+  border: 5px none #333;
+  overflow: auto;
+  width: 600px;
+  padding: 10px 10px 10px 10px; }
+
+.challenge {
+  border: 1px solid #333; }
+
+.char-icon {
+  float: left;
+  vertical-align: top;
+  display: inline-block; }
+
+.bubble {
+  background-color: #F2F2F2;
+  border-radius: 5px;
+  box-shadow: 0 0 6px #B2B2B2;
+  display: inline-block;
+  padding: 10px 18px;
+  position: relative;
+  vertical-align: top;
+  max-width: 490px;
+  margin: 0 0 0 0; }
+
+.bubble::before {
+  background-color: #F2F2F2;
+  content: "\00a0";
+  display: block;
+  height: 16px;
+  position: absolute;
+  top: 11px;
+  transform: rotate(29deg) skew(-35deg);
+  -moz-transform: rotate(29deg) skew(-35deg);
+  -ms-transform: rotate(29deg) skew(-35deg);
+  -o-transform: rotate(29deg) skew(-35deg);
+  -webkit-transform: rotate(29deg) skew(-35deg);
+  width: 20px; }
+
+.me {
+  float: left;
+  margin: 0px 0px 0px 20px; }
+
+.me::before {
+  box-shadow: -2px 2px 2px 0 rgba(178, 178, 178, 0.4);
+  left: -9px; }
+
+.you {
+  float: right;
+  margin: 5px 20px 5px 45px; }
+
+.you::before {
+  box-shadow: 2px -2px 2px 0 rgba(178, 178, 178, 0.4);
+  right: -9px; }

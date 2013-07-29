@@ -1,0 +1,126 @@
+{% extends "layout2.html" %}
+{% block body %}
+
+<h1>Muselon</h1>
+<a href="">Worlds</a> | 
+<a href="">Profile</a> | 
+<a href="Logout">Logout</a>
+
+<hr />
+<ul>
+<li>World: <a href="">HamletWorld</a></li>
+<li>Location: <a href="">The Castle</a></li>
+<li>Thread: <a href="">Old Friends, New Woes</a></li>
+<li>Summary/Warnings/Author's Note: Horatio and co. are back from University. Horatio wonders how Hamlet is holding up.</li>
+<li>Tags: #justchillin</li>
+<li>Rating: G</li>
+<li>Notify (@): Hamlet</li>
+<li>Can be viewed by: All members of HamletWorld</li>
+</ul>
+
+<div class="post-block">
+<table>
+<tr>
+	<td><p class="author"><a href="horatio-profile">Horatio</a></p></td>
+	<td>
+	
+		<div class="post">	
+			<div class="description"><p>Horatio, Marcellus, and Bernardo enter.</p></div>
+		</div>
+		
+		<div class="post">
+			<div class="char-icon" style="height:50px; width:50px;"><img src = "../static/img/tinyhoratio.jpg" /></div>
+			<div class="bubble me"><p>Hail to your lordship!</p></div>
+		</div>
+
+	</td>
+</tr>
+
+<tr>
+	<td><p class="author">Hamlet</p></td>
+	<td>
+		<div class="post">
+			<div class="char-icon" style="height:50px; width:50px;"><img src = "../static/img/tinyhamlet.jpg" /></div>
+			<div class="bubble me">
+				<p>I am glad to see you well.</p>
+				<p>Horatio, -- or I do forget myself.</p>
+			</div>
+		</div>
+
+		<div class="post">
+			<div class="description">
+				<p>This post contains an image.</p>
+				<p><img src="../static/img/hamletscene.jpg" /></p>
+				<p>Embedded video and audio should also be possible</p>
+			</div>
+		</div>
+	</td>
+</tr>
+</table>
+
+	
+<section id="hjapp"  ng-controller="ThreadCtrl" >	
+	
+	<h3>Posts:</h3>
+	<hr />
+	
+<table>
+	<tr ng-repeat="commentblock in commentblocks">
+		<td width=200><p class="author">[[commentblock.author]]</p></td>
+		<td>
+			<div class="post" ng-repeat="comment in commentblock.comments">	
+				<div class="description"><p>[[comment.text]]</p></div>
+			</div>
+		</td>
+	</tr>
+</table>
+<!--HOVER: datetime, edit, delete-->
+
+	<div class="no-posts">
+	<!--p>No posts yet</p-->
+	</div>
+	<hr />
+<table>
+	<tr>
+		<td width=200>
+			<label>Character:</label>
+			<select ng-model="character">
+				<option ng-repeat="character in availableCharacters">[[character.name]]</option>
+			</select>
+		</td>
+		<td>
+			<label>Post type:</label>
+			<select ng-model="postType">
+				<option value="description">Description</option>
+				<option value="dialogue">Dialogue</option>
+			</select>
+
+
+	
+	
+	<div ng-switch on="postType" >
+        <div ng-switch-when="description">
+        		<form ng-submit="append()" ng-show="postType=='description'">
+					<textarea rows="3" ng-model="post"></textarea> <br />
+					<button class="btn"> Append </button>
+					<button type="submit" class="btn btn-primary"> Post </button>
+				</form>
+        
+        </div>
+        <span ng-switch-when="dialogue">IMAGE - TEXT</span>
+        <span ng-switch-default>ERROR</span>
+    </div>
+    
+    </div>
+    
+    		</td>
+	</tr>
+</table>
+    	
+	Shift-Enter to post?
+
+</section>
+
+
+
+{% endblock %}
