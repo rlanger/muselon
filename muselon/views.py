@@ -37,14 +37,18 @@ def return_comments(threadId):
 
 	thread = []	
 	count = 0
+
 	while (count < len(comments)):
 		
-		commentblock={"author": comments[count].author, "comments": []}
+		character = db.session.query(Character).get(comments[count].author_id)
+		print character
+
+		commentblock={"authorId": character.id, "author": character.name, "comments": []}
 		thread.append(commentblock)
 		commentblock["comments"].append(comments[count].serialize())
 		count += 1
 				
-		while count < len(comments) and comments[count].author==comments[count-1].author:
+		while count < len(comments) and comments[count].author_id==comments[count-1].author_id:
 		
 			commentblock["comments"].append(comments[count].serialize())
 			count += 1
@@ -68,9 +72,10 @@ class ThreadNamespace(BaseNamespace):
 	def initialize(self):
 		print "HELLO HELLO HELLO"
 
-	def on_post(self, data):
-		print "NEW POST: " + data 
-		comment = Comment(data)
+	def on_description_post(self, data):
+		print ("NEW POST: ", data) 
+		# sanitize / check format of data
+		comment = Comment(data["text"], data["charId"])
 		comment.save()
 		self.emit("updateComments")
 

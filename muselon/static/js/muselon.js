@@ -57,8 +57,17 @@ var muselon = angular.module('muselon', ['ngResource'])
 	
 	$scope.submitPost = function () {
 		if (this.post) {
-			if ($scope.postType = "description") {
-				socketio.emit('post', this.post, 1);
+		
+			charId = null;
+			for (var i=0; i<$scope.availableCharacters.length; i++){
+				console.log($scope.availableCharacters);
+				if ($scope.availableCharacters[i].name == this.character) {
+					charId = $scope.availableCharacters[i].id	
+				}
+			}		
+		
+			if ($scope.postType = "description") {		
+				socketio.emit('description_post', {"text": this.post, "charId": charId});
 			} else if ($scope.postType = "dialogue") {
 				socketio.emit('dialogue_post', this.post, this.icon);
 			} else if ($scope.postType = "challenge") {

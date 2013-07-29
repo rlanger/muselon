@@ -91,7 +91,7 @@ class Comment(Base):
 		db.session.commit()
 
 	def serialize(self):
-		return {"author": self.author, "datetime": self.time, "text": self.text}
+		return {"authorId": self.author_id, "datetime": self.time, "text": self.text}
 
 class World(Base):
 

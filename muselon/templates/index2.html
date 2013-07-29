@@ -94,26 +94,19 @@
 				<option value="description">Description</option>
 				<option value="dialogue">Dialogue</option>
 			</select>
-
-
 	
-	
-	<div ng-switch on="postType" >
-        <div ng-switch-when="description">
-        		<form ng-submit="append()" ng-show="postType=='description'">
+			<div ng-switch on="postType" >
+        	<div ng-switch-when="description">
+        		<form ng-submit="submitPost()" ng-show="postType=='description'">
 					<textarea rows="3" ng-model="post"></textarea> <br />
 					<button class="btn"> Append </button>
 					<button type="submit" class="btn btn-primary"> Post </button>
 				</form>
-        
-        </div>
-        <span ng-switch-when="dialogue">IMAGE - TEXT</span>
-        <span ng-switch-default>ERROR</span>
-    </div>
-    
-    </div>
-    
-    		</td>
+        	</div>
+	        <span ng-switch-when="dialogue">IMAGE - TEXT</span>
+    	    <span ng-switch-default>ERROR</span>
+    		</div>
+    	</td>
 	</tr>
 </table>
     	
