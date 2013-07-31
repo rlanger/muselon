@@ -12,7 +12,7 @@ from socketio.server import SocketIOServer
 
 monkey.patch_all()
 
-PORT = 5000
+port = int(os.environ.get('PORT', 5000))
 
 # muselon.debug=True
 
