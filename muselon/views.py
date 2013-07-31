@@ -23,7 +23,7 @@ TIME_DISPLAY_FORMAT = '%d %b, %Y %H:%M'
 
 @muselon.route('/')
 def index():
-	return render_template('index2.html')
+	return render_template('index.html')
 
 
 
