@@ -15,6 +15,7 @@ monkey.patch_all()
 # muselon.debug=True
 
 if __name__ == '__main__':
+
 	port = int(os.environ.get('PORT', 5000))
 #	print 'Listening on http://127.0.0.1:%s and on port 10843 (flash policy server)' % PORT
 	SocketIOServer(('', port), muselon, resource="socket.io").serve_forever()

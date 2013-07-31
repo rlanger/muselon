@@ -105,7 +105,6 @@ class World(Base):
 	title = Column(String)
 	description = Column(String)
 	
-
 # Initialize database schema (create tables)
-def init_db():
-	Base.metadata.create_all(engine)
+#def init_db():
+Base.metadata.create_all(engine)
