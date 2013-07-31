@@ -12,16 +12,17 @@ td {
 
 .author {
   text-align: right;
-  margin: 0 30px 0 0;
-  margin: 10px 30px 0 0;
+  padding: 10px 30px 0px 0px;
   font-weight: bold; }
 
 .post {
   margin: 0px 20px 0 0;
-  border: 5px none #333;
   overflow: auto;
   width: 600px;
   padding: 10px 10px 10px 10px; }
+
+.description {
+  color: green; }
 
 .challenge {
   border: 1px solid #333; }
@@ -40,7 +41,9 @@ td {
   position: relative;
   vertical-align: top;
   max-width: 490px;
-  margin: 0 0 0 0; }
+  margin: 0 0 0 0;
+  float: left;
+  margin: 0px 0px 0px 20px; }
 
 .bubble::before {
   background-color: #F2F2F2;
@@ -54,20 +57,6 @@ td {
   -ms-transform: rotate(29deg) skew(-35deg);
   -o-transform: rotate(29deg) skew(-35deg);
   -webkit-transform: rotate(29deg) skew(-35deg);
-  width: 20px; }
-
-.me {
-  float: left;
-  margin: 0px 0px 0px 20px; }
-
-.me::before {
+  width: 20px;
   box-shadow: -2px 2px 2px 0 rgba(178, 178, 178, 0.4);
   left: -9px; }
-
-.you {
-  float: right;
-  margin: 5px 20px 5px 45px; }
-
-.you::before {
-  box-shadow: 2px -2px 2px 0 rgba(178, 178, 178, 0.4);
-  right: -9px; }

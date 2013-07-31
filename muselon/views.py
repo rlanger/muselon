@@ -73,12 +73,19 @@ class ThreadNamespace(BaseNamespace, BroadcastMixin):
 		print "HELLO HELLO HELLO"
 
 	def on_description_post(self, data):
+		print ("on description post")
 		print ("NEW POST: ", data) 
-		# sanitize / check format of data
-		comment = Comment(data["text"], data["charId"])
+
+		comment = Comment(0, data["text"], data["charId"])
 		comment.save()
 		self.broadcast_event("updateComments")
-
+		
+	def on_dialogue_post(self, data):
+		print ("on dialogue post")
+		print ("NEW POST: ", data)
+		comment = Comment(1, data["text"], data["charId"]) # and icon
+		comment.save()
+		self.broadcast_event("updateComments")
 
 @lm.user_loader
 def load_user(userid):

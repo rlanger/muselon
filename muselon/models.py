@@ -19,6 +19,9 @@ Base.query = db_session.query_property()
 ROLE_USER = 0
 ROLE_ADMIN = 1
 
+DESCRIPTION = 0
+DIALOGUE = 1
+
 class User(Base):
 
 	__tablename__ = 'user_table'
@@ -74,13 +77,16 @@ class Comment(Base):
 	author_id = Column (Integer, ForeignKey('characters.id'))
 	time = Column (DateTime, nullable=False)
 	text = Column (String, nullable=False)
+	type = Column (SmallInteger, default = DESCRIPTION)
+
 	
-	def __init__(self, text, author_id):
+	def __init__(self, type, text, author_id):
 		#self.world_id = world.id
 		#self.nickname = nickname
+		self.type = type
+		self.text = text
 		self.author_id = author_id
 		self.time = datetime.datetime.now()
-		self.text = text
 
 
 	def __unicode__(self):
@@ -91,7 +97,7 @@ class Comment(Base):
 		db.session.commit()
 
 	def serialize(self):
-		return {"authorId": self.author_id, "datetime": self.time, "text": self.text}
+		return {"authorId": self.author_id, "datetime": self.time, "text": self.text, "type":self.type}
 
 class World(Base):
 

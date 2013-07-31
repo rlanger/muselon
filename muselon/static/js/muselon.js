@@ -1,4 +1,4 @@
-var muselon = angular.module('muselon', ['ngResource'])
+var muselon = angular.module('muselon', ['ngResource', 'ngSanitize'])
 
 .config(function($interpolateProvider) {
 	$interpolateProvider.startSymbol('[[');
@@ -49,31 +49,37 @@ var muselon = angular.module('muselon', ['ngResource'])
 	charactersObj = characterFactory.get({userId: 1, worldId: 1}, function() {
 		$scope.availableCharacters = charactersObj.json_list;
 		console.log($scope.availableCharacters);
-		$scope.character = $scope.availableCharacters[0].name;
+		$scope.post.selectedCharacterName = $scope.availableCharacters[0].name;
+		$scope.post.selectedCharacterId = $scope.availableCharacters[0].id;
 
 	});
 		
-	$scope.postType = "description";
-	
-	$scope.submitPost = function () {
-		if (this.post) {
-		
-			charId = null;
-			for (var i=0; i<$scope.availableCharacters.length; i++){
-				console.log($scope.availableCharacters);
-				if ($scope.availableCharacters[i].name == this.character) {
-					charId = $scope.availableCharacters[i].id	
-				}
-			}		
-		
-			if ($scope.postType = "description") {		
-				socketio.emit('description_post', {"text": this.post, "charId": charId});
-			} else if ($scope.postType = "dialogue") {
-				socketio.emit('dialogue_post', this.post, this.icon);
-			} else if ($scope.postType = "challenge") {
-				socketio.emit('challenge_post', this.post, this.stat);
+
+	$scope.post = {type: "description", text: ""};
+
+	$scope.$watch("post.selectedCharacterName", function() {
+		for (var i=0; i<$scope.availableCharacters.length; i++){
+			if ($scope.availableCharacters[i].name == $scope.post.selectedCharacterName) {
+					$scope.post.selectedCharacterId = $scope.availableCharacters[i].id;
 			}
-			this.post = '';
+		}
+	});
+		
+	$scope.submitPost = function () {
+		if (this.post.text) {
+		
+			charId = this.selectedCharacterId;
+		
+			if ($scope.post.type == "description") {
+				console.log('emit description');
+				socketio.emit('description_post', {"text": this.post.text, "charId": charId});
+			} else if ($scope.post.type == "dialogue") {
+				console.log('emit dialogue');
+				socketio.emit('dialogue_post', {"text": this.post.text, "charId": charId});
+			} else if ($scope.post.type == "challenge") {
+				socketio.emit('challenge_post', this.post.text, this.stat);
+			}
+			this.post.text = '';
 		}
 	}
 	

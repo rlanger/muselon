@@ -13,7 +13,6 @@
 <li>Thread: <a href="">Old Friends, New Woes</a></li>
 <li>Summary/Warnings/Author's Note: Horatio and co. are back from University. Horatio wonders how Hamlet is holding up.</li>
 <li>Tags: #justchillin</li>
-<li>Rating: G</li>
 <li>Notify (@): Hamlet</li>
 <li>Can be viewed by: All members of HamletWorld</li>
 </ul>
@@ -30,7 +29,7 @@
 		
 		<div class="post">
 			<div class="char-icon" style="height:50px; width:50px;"><img src = "../static/img/tinyhoratio.jpg" /></div>
-			<div class="bubble me"><p>Hail to your lordship!</p></div>
+			<div class="bubble"><p>Hail to your lordship!</p></div>
 		</div>
 
 	</td>
@@ -68,8 +67,14 @@
 	<tr ng-repeat="commentblock in commentblocks">
 		<td width=200><p class="author">[[commentblock.author]]</p></td>
 		<td>
-			<div class="post" ng-repeat="comment in commentblock.comments">	
-				<div class="description"><p>[[comment.text]]</p></div>
+			<div ng-repeat="comment in commentblock.comments" ng-switch on="comment.type" class="post">
+				<!--Decription-->
+				<div ng-switch-when="0" class="description" ng-bind-html="comment.text"></div>
+				<!--Dialogue-->
+				<div ng-switch-when="1">
+					<img src = "../static/userimg/[[comment.authorId]]/default.jpg" class="char-icon" style="height:50px; width:50px;"/>
+					<div class="bubble" ng-bind-html="comment.text"></div>
+				</div>
 			</div>
 		</td>
 	</tr>
@@ -82,38 +87,37 @@
 	<hr />
 <table>
 	<tr>
+		<form ng-submit="submitPost()">
+
 		<td width=200>
 			<label>Character:</label>
-			<select ng-model="character">
+			<select ng-model="post.selectedCharacterName">
 				<option ng-repeat="character in availableCharacters">[[character.name]]</option>
 			</select>
 		</td>
 		<td>
+			
 			<label>Post type:</label>
-			<select ng-model="postType">
+			<select ng-model="post.type">
 				<option value="description">Description</option>
 				<option value="dialogue">Dialogue</option>
 			</select>
-	
-			<div ng-switch on="postType" >
+				
+			<div ng-switch on="post.type" >
         	<div ng-switch-when="description">
-        		<form ng-submit="submitPost()" ng-show="postType=='description'">
-					<textarea rows="3" ng-model="post"></textarea> <br />
-					<button class="btn"> Append </button>
-					<button type="submit" class="btn btn-primary"> Post </button>
-				</form>
+					<textarea rows="3" ng-model="post.text"></textarea> <br />
         	</div>
 	        <div ng-switch-when="dialogue">
-	            <form ng-submit="submitPost()" ng-show="postType=='dialogue'">
-	            	<button class="btn"><img src="../static/img/tinyhamlet.jpg" /></button>
-					<textarea rows="3" ng-model="post"></textarea> <br />
-					<button class="btn"> Append </button>
-					<button type="submit" class="btn btn-primary"> Post </button>
-				</form>
+	            	<button class="btn"><img src="../static/userimg/[[post.selectedCharacterId]]/default.jpg" /></button>
+					<textarea rows="3" ng-model="post.text"></textarea> <br />
 	        </div>
     	    <span ng-switch-default>ERROR</span>
     		</div>
+    		
+    		<button class="btn" ng-click="append()"> Append </button>
+			<button type="submit" class="btn btn-primary"> Post </button>
     	</td>
+    	</form>
 	</tr>
 </table>
     	
