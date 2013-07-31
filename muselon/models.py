@@ -73,7 +73,7 @@ class Comment(Base):
 	__tablename__ = 'comments'
 
 	id = Column (Integer, primary_key=True)
-	#thread_id = Column (Integer, ForeignKey('chatrooms.id'))
+	#thread_id = Column (Integer, ForeignKey('threads.id'))
 	author_id = Column (Integer, ForeignKey('characters.id'))
 	time = Column (DateTime, nullable=False)
 	text = Column (String, nullable=False)
@@ -81,8 +81,6 @@ class Comment(Base):
 
 	
 	def __init__(self, type, text, author_id):
-		#self.world_id = world.id
-		#self.nickname = nickname
 		self.type = type
 		self.text = text
 		self.author_id = author_id
@@ -107,68 +105,7 @@ class World(Base):
 	title = Column(String)
 	description = Column(String)
 	
-	# public / private
-	# custom styling
-	# places/events -> posts
-	
-	
-# chat models
-# class ChatRoom(Base):
-#     __tablename__ = 'chatrooms'
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(20), nullable=False)
-#     slug = db.Column(db.String(50))
-#     users = db.relationship('ChatUser', backref='chatroom', lazy='dynamic')
-#     comments = db.relationship('Comment', backref='chatroom', lazy='dynamic')
-# 
-#     def __unicode__(self):
-#         return self.name
-# 
-#     def get_absolute_url(self):
-#         return url_for('room', slug=self.slug)
-# 
-#     def save(self, *args, **kwargs):
-#         if not self.slug:
-#             self.slug = slugify(self.name)
-#         db.session.add(self)
-#         db.session.commit()
-# 
-# 
-# class ChatUser(Base):
-#     __tablename__ = 'chatusers'
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(20), nullable=False)
-#     session = db.Column(db.String(20), nullable=False)
-#     chatroom_id = db.Column(db.Integer, db.ForeignKey('chatrooms.id'))
-# 
-#     def __unicode__(self):
-#         return self.name
-# 
-# #class Comment(Base):
-# #	__tablename__ = 'comments'
-# # 	id = Column (Integer, primary_key=True)
-# # 	world_id = Column (Integer, ForeignKey('chatrooms.id'))
-# # 	#user_id = Column (Integer, ForeignKey('chatusers.id'))
-# # 	time = Column (DateTime, nullable=False)
-# # 	text = Column (String, nullable=False)
-# # 	
-# # 	def __init__(self, world, nickname, text):
-# # 		self.world_id = world.id
-# # 		#self.nickname = nickname
-# # 		self.text = text
-# # 
-# # 		self.time = datetime.datetime.now()
-# # 
-# # 	def __unicode__(self):
-# # 		return self.text
-# # 
-# # 	def save(self, *args, **kwargs):
-# # 		db.session.add(self)
-# # 		db.session.commit()
 
 # Initialize database schema (create tables)
 def init_db():
 	Base.metadata.create_all(engine)
-
-#def init_db():
-#    db.create_all(app=muselon)

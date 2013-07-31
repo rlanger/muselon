@@ -68,7 +68,7 @@ var muselon = angular.module('muselon', ['ngResource', 'ngSanitize'])
 	$scope.submitPost = function () {
 		if (this.post.text) {
 		
-			charId = this.selectedCharacterId;
+			charId = this.post.selectedCharacterId;
 		
 			if ($scope.post.type == "description") {
 				console.log('emit description');
