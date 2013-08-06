@@ -7,7 +7,7 @@ CSRF_ENABLED = True
 SECRET_KEY = 'ourlittlesecret'	# crypto token
 
 # Database configuration
-SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or "sqlite:////Users/cicero/hackerschool/project_muselon/test.db"
+SQLALCHEMY_DATABASE_URI = os.environ.get('HEROKU_POSTGRESQL_CYAN_URL') or "sqlite:////Users/cicero/hackerschool/project_muselon/test.db"
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 

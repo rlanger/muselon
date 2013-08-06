@@ -68,7 +68,7 @@ def return_available_characters(userId, worldId):
 		print ("REQUEST.ARGS: ", request.args['name'])
 		newCharacter = Character(request.args['name'])
 		newCharacter.save()
-		return "character saved"
+		return render_template(url_for("return_available_characters"))
 		
 
 
