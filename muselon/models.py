@@ -68,6 +68,13 @@ class Character(Base):
 	
 	def serialize(self):
 		return {"name": self.name, "id": self.id}
+		
+	def __init__(self, name):
+		self.name = name
+		
+	def save(self, *args, **kwargs):
+		db.session.add(self)
+		db.session.commit()
 	
 class Comment(Base):
 	__tablename__ = 'comments'
@@ -106,5 +113,5 @@ class World(Base):
 	description = Column(String)
 	
 # Initialize database schema (create tables)
-#def init_db():
-Base.metadata.create_all(engine)
+def init_db():
+	Base.metadata.create_all(engine)

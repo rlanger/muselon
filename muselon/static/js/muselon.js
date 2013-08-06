@@ -36,7 +36,10 @@ var muselon = angular.module('muselon', ['ngResource', 'ngSanitize'])
 })
 
 .factory("characterFactory", function($resource){
-	return $resource($SCRIPT_ROOT+ '/characters/user/:userId/world/:worldId', {userId: 1, worldId: 1});
+	return $resource($SCRIPT_ROOT+ '/characters/user/:userId/world/:worldId', {userId: 1, worldId: 1}, 
+	{update: {method: 'PUT', data:{name:'@name'}, isArray: false}}
+
+);
 })
 
 .controller('ThreadCtrl', function($scope, socketio, commentFactory, characterFactory, $http){
@@ -96,5 +99,27 @@ var muselon = angular.module('muselon', ['ngResource', 'ngSanitize'])
 	
 })
 
+.controller('ProfileCtrl', function($scope, socketio, characterFactory, $http){
+	charactersObj = characterFactory.get({userId: 1, worldId: 1}, function() {
+		$scope.characters = charactersObj.json_list;
+	});
+	
+	$scope.addCharacter = function () {
+		if (this.characterName) {
+			
+			console.log("Adding character");
+			console.log(this.characterName);
+
+			charactersObj.$update({name: this.characterName});
+			
+			this.characterName = '';
+		}
+	}
+	
+})
 
 ;
+
+
+
+

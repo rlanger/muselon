@@ -10,5 +10,5 @@ db = SQLAlchemy(muselon)
 lm = LoginManager()
 lm.init_app(muselon)
 lm.login_view = 'login'
-	
+
 from muselon import views, models

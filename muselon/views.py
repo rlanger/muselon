@@ -56,11 +56,20 @@ def return_comments(threadId):
 	print (thread)
 	return jsonify (json_list = thread)
 	
-@muselon.route('/characters/user/<userId>/world/<worldId>', methods=['GET', 'POST'])
+@muselon.route('/characters/user/<userId>/world/<worldId>', methods=['GET', 'PUT'])
 def return_available_characters(userId, worldId):
 	characters = db.session.query(Character).all()
 	
-	return jsonify (json_list = [character.serialize() for character in characters])
+	if request.method == 'GET':
+		return jsonify (json_list = [character.serialize() for character in characters])
+		
+	if request.method == 'PUT':
+		#revisedjson = request.json_list
+		print ("REQUEST.ARGS: ", request.args['name'])
+		newCharacter = Character(request.args['name'])
+		newCharacter.save()
+		return "character saved"
+		
 
 
 @muselon.route('/socket.io/<path:remaining>')
@@ -86,6 +95,16 @@ class ThreadNamespace(BaseNamespace, BroadcastMixin):
 		comment = Comment(1, data["text"], data["charId"]) # and icon
 		comment.save()
 		self.broadcast_event("updateComments")
+
+@muselon.route('/profile')
+def userProfile():
+	return render_template('profile.html')
+
+@muselon.route('/newCharacter', methods=['GET', 'POST'])
+def newCharacter():
+	character = Character(request.form["data"])
+	character.save()
+	
 
 @lm.user_loader
 def load_user(userid):
