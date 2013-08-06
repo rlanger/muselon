@@ -62,7 +62,10 @@ Create Login\
 1. Create load_user, login, and logout methods\
 2. Create login.html page\
 \
-Upload to Heroku\
+Make it work with the Heroku Postgresql database\
+1. pip install psycopg2\
+2. set SQLALCHEMY_DATABASE_URI = os.environ.get('HEROKU_POSTGRESQL_CYAN_URL') or "sqlite:////Users/cicero/hackerschool/project_muselon/test.db"\
+3. initialize database ("heroku run python init_db.py")\
 \
 Add SocketIO functionality\
 }
