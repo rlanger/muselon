@@ -27,27 +27,46 @@ def index():
 
 
 
-# Returns a JSON object containing all comments in the thread, sorted into comment blocks.
-# A comment block consists of all comments made by a character without interruption.
-# Comments are sorted into groups so that the author character's name can be shown just once per block.
+# JJP: Python style note: usually you put this sort of comment explaining a method in
+# what's called a "docstring", which is just a multiline comment that's the first thing
+# appearing in a method, like this:
+
 @muselon.route('/thread/<threadId>', methods=['GET', 'POST'])
 def return_comments(threadId):
+	"""Returns a JSON object containing all comments in the thread, sorted into comment blocks.
+	A comment block consists of all comments made by a character without interruption.
+	Comments are sorted into groups so that the author character's name can be shown just once per block."""
 	
+	# JJP: This will
+	
+	# JJP: if your models are set up correctly, you should just be able to do:
+	# Comment.query.all()
 	comments = db.session.query(Comment).all()
 
-	thread = []	
+	thread = []
 	count = 0
 
 	while (count < len(comments)):
-		
+	# JJP: iterating with while loops and comments is usually considered unpythonic
+	# its often better to just use `for comment in comments`
+	
 		character = db.session.query(Character).get(comments[count].author_id)
+		# Also if you set up a relationship between Characters and Comments, you can
+		# just do somthing like `character = comment.character` nd avoid the big messy
+		# query. See http://docs.sqlalchemy.org/en/rel_0_8/orm/relationships.html
+
 		print character
 
 		commentblock={"authorId": character.id, "author": character.name, "comments": []}
 		thread.append(commentblock)
 		commentblock["comments"].append(comments[count].serialize())
 		count += 1
-				
+		
+		# JJP: not sure if this is a good idea, but is it really necessary for the server to do
+		# all this work to group things into blocks? Since the blocks are sort of logic having
+		# to do with how the stuff is presented, I think it makes more sense to have the backend
+		# just send data and let the JS on the client side decide how to display it (viz., in blocks)
+		
 		while count < len(comments) and comments[count].author_id==comments[count-1].author_id:
 		
 			commentblock["comments"].append(comments[count].serialize())
@@ -56,16 +75,19 @@ def return_comments(threadId):
 	print (thread)
 	return jsonify (json_list = thread)
 	
+	
 @muselon.route('/characters/user/<userId>/world/<worldId>', methods=['GET', 'PUT'])
 def return_available_characters(userId, worldId):
 	characters = db.session.query(Character).all()
 	
+	#JJP: I tend to define distinct routes for each HTTP method, but this may be a matter of taste
 	if request.method == 'GET':
 		return jsonify (json_list = [character.serialize() for character in characters])
 		
 	if request.method == 'PUT':
 		#revisedjson = request.json_list
 		print ("REQUEST.ARGS: ", request.args['name'])
+		# JJP: Python style is to do underscores (new_character) rather than camel case (newCharacter)
 		newCharacter = Character(request.args['name'])
 		newCharacter.save()
 		return render_template(url_for("return_available_characters"))
@@ -100,12 +122,17 @@ class ThreadNamespace(BaseNamespace, BroadcastMixin):
 def userProfile():
 	return render_template('profile.html')
 
+
+#JJP: If you want to be RESTful, creating a new entity is usually a POST to
+# the appropriate collection, here a POST to `/characters`. See
+# https://blog.apigee.com/detail/restful_api_design
 @muselon.route('/newCharacter', methods=['GET', 'POST'])
 def newCharacter():
 	character = Character(request.form["data"])
 	character.save()
 	
-
+# JJP: This isn't a view, so it seems weird to have lodged in the middle of all these views
+# I might put this in models or just in the package __init__ or something.
 @lm.user_loader
 def load_user(userid):
 	return User.query.get(userid)
@@ -123,6 +150,8 @@ def register():
 		return redirect(url_for("index"))
 	return render_template("register.html", form=form)
 
+# JJP: It also seems like you have a lot of methods that can be GETed or POSTed to
+# but you don't actually dispatch on which it is.
 @muselon.route('/login', methods=['GET', 'POST'])
 def login():
 	form = LoginForm()
