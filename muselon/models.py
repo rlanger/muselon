@@ -15,7 +15,9 @@ db_session = scoped_session(sessionmaker(autocommit=False,
 Base = declarative_base()
 Base.query = db_session.query_property()
 
-
+# JJP: I just found out about this, but there's
+# a package for enums, so you might consider using
+# https://pypi.python.org/pypi/enum/ 
 ROLE_USER = 0
 ROLE_ADMIN = 1
 
@@ -65,6 +67,9 @@ class Character(Base):
 	id = Column(Integer, primary_key = True)
 	name = Column(String)
 	about = Column(String)
+	
+	# JJP: A lot of your queries could be simplifed if you
+	# had a relationship between characters and comments.
 	
 	def serialize(self):
 		return {"name": self.name, "id": self.id}
